@@ -1,5 +1,5 @@
 
-export function AvatarIcon({ height = "144.773", width = "144.773", className = "icons-svg", fill = "", strokeWidth = "10" }: any) {
+export function AvatarIcon({ height = "144.773", width = "144.773", className = "icons-svg", fill = "green", strokeWidth = "10" }: any) {
     return (
         <svg
             id="avatar-icon"
@@ -11,7 +11,7 @@ export function AvatarIcon({ height = "144.773", width = "144.773", className = 
             className={className}
         >
             <g>
-                <circle style={{ fill: "green" }} cx="72.387" cy="72.386" r="72.386" />
+                <circle style={{ fill: fill }} cx="72.387" cy="72.386" r="72.386" />
                 <g>
                     <defs>
                         <circle id="SVGID_1_" cx="72.387" cy="72.386" r="72.386" />

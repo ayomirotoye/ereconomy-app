@@ -1,5 +1,10 @@
 
-export function NotificationIcon({ height = "512", width = "512", className = "icons-svg", fill = "", strokeWidth = "10" }: any) {
+export function NotificationIcon({
+    height = "512",
+    width = "512",
+    className = "icons-svg",
+    fill = "",
+    strokeWidth = "10" }: any) {
     return (
         <svg
             id="notification-icon"
@@ -13,10 +18,10 @@ export function NotificationIcon({ height = "512", width = "512", className = "i
             <g>
                 <g>
                     <g>
-                        <path 
-                        fill={fill}
-                        strokeWidth={strokeWidth}
-                        d="M570.107,500.254c-65.037-29.371-67.511-155.441-67.559-158.622v-84.578c0-81.402-49.742-151.399-120.427-181.203
+                        <path
+                            fill={fill}
+                            strokeWidth={strokeWidth}
+                            d="M570.107,500.254c-65.037-29.371-67.511-155.441-67.559-158.622v-84.578c0-81.402-49.742-151.399-120.427-181.203
 				C381.969,34,347.883,0,306.001,0c-41.883,0-75.968,34.002-76.121,75.849c-70.682,29.804-120.425,99.801-120.425,181.203v84.578
 				c-0.046,3.181-2.522,129.251-67.561,158.622c-7.409,3.347-11.481,11.412-9.768,19.36c1.711,7.949,8.74,13.626,16.871,13.626
 				h164.88c3.38,18.594,12.172,35.892,25.619,49.903c17.86,18.608,41.479,28.856,66.502,28.856

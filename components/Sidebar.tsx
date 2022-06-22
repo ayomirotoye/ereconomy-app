@@ -37,7 +37,8 @@ export default function Sidebar({ sidebarItems }: any) {
                         {
                             sidebarItems.map((items: any, index: number) => {
                                 let check = checkMatch(items, urlPath);
-                                return <Link key={`sidebar_items_${index}`} href={items.route} className={`mx-3 py-2 mb-2 flex items-center justify-between text-sm font-medium rounded-lg hover:bg-green-100 ${check ? "bg-green-100 sidebar-active font-bold" : ""}`}>
+                                return <Link key={`sidebar_items_${index}`} href={items?.route}
+                                    className={`mx-3 py-2 mb-2 flex items-center justify-between text-sm font-medium rounded-lg hover:bg-green-100 ${check ? "bg-green-100 sidebar-active font-bold" : ""}`}>
                                     <span className="inline-flex items-center my-5 mx-3">
                                         {items.icon}
                                         <span className="ml-2 hidden md:block text-white">{items.title}</span>

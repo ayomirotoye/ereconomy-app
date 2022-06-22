@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../hooks/state";
 import { appendTokenInputData, deleteTokenInputData, setTnxPinProvided, toggleTnxPinModalState } from "../../state/reducers/tokenizedInputReducer";
-import { tnxPinLength } from "../../static/constants";
+// import { tnxPinLength } from "../../static/constants";
 import { isNullOrUndefined } from "../../utils/helpers";
 
 
@@ -24,7 +24,7 @@ export default function TransactionPinModal({ headerText = "Please enter transac
     }
 
     const handleAuth = () => {
-        if (isNullOrUndefined(tokenInputData) || tokenInputData.length < tnxPinLength) {
+        if (isNullOrUndefined(tokenInputData) || tokenInputData.length < 6) {
             dispatch(setTnxPinProvided({ isTnxPinProvided: false }));
             handleClose();
         } else

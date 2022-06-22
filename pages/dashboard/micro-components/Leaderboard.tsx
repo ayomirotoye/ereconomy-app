@@ -5,7 +5,7 @@ import DynamicText from "../../../components/texts/DynamicText"
 export default function Leaderboard({ listItems }: any) {
     return (
         <div className="overflow-auto">
-            {listItems.map((_items: any, index: number) => {
+            {listItems?.map((_items: any, index: number) => {
                 return <div className="w-full flex my-1">
                     <div className="flex w-1/5 justify-between">
                         <DynamicText className="mr-2 -mb-1 font-bold" size="16px">{index + 1}</DynamicText>

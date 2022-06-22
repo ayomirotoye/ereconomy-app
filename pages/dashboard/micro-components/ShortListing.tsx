@@ -10,7 +10,7 @@ export default function ShortListing({ listItems, listTitle }: any) {
             </div>
             <div id="list-items" className="my-5 ">
                 {
-                    listItems.length > 0 ? listItems.map((_items: any, index: number) => {
+                    listItems?.length > 0 ? listItems?.map((_items: any, index: number) => {
                         return <div className="grid grid-cols-6 space-x-2" key={`${`listitems_` + index}`}>
                             <div className="col-span-1 bg-white p-2 text-center align-middle rounded-md">
                                 <div className="font-[900] text-green-900 text-[12px]">

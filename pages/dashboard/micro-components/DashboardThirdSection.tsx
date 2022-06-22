@@ -2,7 +2,7 @@ import colors from "tailwindcss/colors";
 import { EyeIcon } from "../../../assets/icons/EyeIcon";
 import { PlusIcon } from "../../../assets/icons/PlusIcon";
 import DynamicText from "../../../components/texts/DynamicText";
-import Leaderboard from "./Leaderboards";
+import Leaderboard from "./Leaderboard";
 
 export default function DashboardThirdSection() {
     return (

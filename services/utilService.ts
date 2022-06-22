@@ -1,4 +1,5 @@
-import { responseCodes, responseMessages } from "../static/constants";
+
+import { responseCodes, responseMessages } from "../commons/static/constants";
 import { endpoints } from "../utils/apiCallEndpoints";
 import httpService from "./httpService";
 

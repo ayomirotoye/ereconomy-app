@@ -1,25 +1,21 @@
-import MenuDropdown from "../../dropdowns/MenuDropdown";
-import {
-    VictoryLabel, VictoryChart, VictoryAxis,
-    VictoryStack, VictoryVoronoiContainer, VictoryHistogram
-} from 'victory';
-const groupedData: { [s: string]: any; } = [];
+import React from "react";
+// const groupedData: { [s: string]: any; } = [];
 
-const sharedAxisStyles = {
-    tickLabels: {
-        fontSize: 13
-    },
-    axisLabel: {
-        padding: 39,
-        fontSize: 13,
-        fontStyle: "italic"
-    }
-};
+// const sharedAxisStyles = {
+//     tickLabels: {
+//         fontSize: 13
+//     },
+//     axisLabel: {
+//         padding: 39,
+//         fontSize: 13,
+//         fontStyle: "italic"
+//     }
+// };
 
 export default function TimelineGraph() {
     return (
         <>
-            <div className="absolute w-1/6 my-3 mx-2 ">
+            {/* <div className="absolute w-1/6 my-3 mx-2 ">
                 <MenuDropdown
                     menuList={{
                         menuTitle: "Year",
@@ -91,7 +87,7 @@ export default function TimelineGraph() {
                     label="Total # of Songs"
                     style={sharedAxisStyles}
                 />
-            </VictoryChart>
+            </VictoryChart> */}
         </>
     )
 }

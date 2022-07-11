@@ -5,6 +5,7 @@ import "./assets/styles/css/svgStyles.css"
 import "./assets/styles/css/custom.css"
 import { urlPaths } from "./static/constants";
 import Login from "./pages/auth/login";
+import Dashboard from "./pages/dashboard";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
             <Routes>
               <Route index element={<Home />} />
               <Route path={urlPaths.login} element={<Login />} />
-              {/* <Route path={urlPaths.dashboard} element={<Dashboard />} /> */}
+              <Route path={urlPaths.dashboard} element={<Dashboard />} />
             </Routes>
           </BrowserRouter>
         </Suspense>

@@ -1,7 +1,6 @@
-import React from "react";
 import { TargetSavingIcon } from "../assets/icons/TargetSavingIcon"
 import { UserIcon } from "../assets/icons/UserIcon"
-import { urlPaths } from "../commons/static/constants";
+import { urlPaths } from "../static/constants";
 
 export const appNavigationLinks = {
     home: ["/home", "/"],

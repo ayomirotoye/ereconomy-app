@@ -1,0 +1,13 @@
+#login-container {
+    background-image: url("../../img/jpg/bg-save-to-earn.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+button:hover:not([disabled]) {
+    transform: translateY(-5px);
+}
+
+button:disabled{
+    background-color: gray;
+}

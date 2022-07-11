@@ -1,6 +1,7 @@
+// @preval
 const colors = require('tailwindcss/colors')
 
-module.exports = {
+export const config =/* preval */ {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
   ],

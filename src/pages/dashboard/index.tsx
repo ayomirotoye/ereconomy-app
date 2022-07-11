@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import colors from "tailwindcss/colors";
-import x from /* preval */ '../../tailwind.config'
-// import { theme } from "../../tailwind.config";
+import {config} from /* preval */ '../../tailwind.config'
 import { AvatarIcon } from "../../assets/icons/AvatarIcon";
 import BasketIcon from "../../assets/icons/BasketIcon";
 import { EyeIcon } from "../../assets/icons/EyeIcon";
@@ -86,27 +85,27 @@ export default function Dashboard() {
         {
             name: 'Profile',
             href: "/profile",
-            icon: <UserIcon className="h-5 w-5" fill={x.theme.extend.colors.primary[900]}
-                stroke={x.theme.extend.colors.primary[900]} strokeWidth={3} />,
+            icon: <UserIcon className="h-5 w-5" fill={config.theme.extend.colors.primary[900]}
+                stroke={config.theme.extend.colors.primary[900]} strokeWidth={3} />,
         },
         {
             name: 'Logout',
             href: "/logout",
             icon: <LogoutIcon className="h-7 w-7 mt-1"
-                stroke={x.theme.extend.colors.primary[900]}
-                fill={x.theme.extend.colors.primary[900]} strokeWidth={3} />,
+                stroke={config.theme.extend.colors.primary[900]}
+                fill={config.theme.extend.colors.primary[900]} strokeWidth={3} />,
         },
         {
             name: 'Settings',
             href: "/settings",
             icon: <UserSettingsIcon className="h-5 w-5" fill={colors.white}
-                stroke={x.theme.extend.colors.primary[900]} strokeWidth={3} />,
+                stroke={config.theme.extend.colors.primary[900]} strokeWidth={3} />,
         },
     ]
 
     const [tileItems, setTileItems] = useState({
         savings: {
-            icon: <SavingsIcon fill={x.theme.extend.colors.primary["900"]} />,
+            icon: <SavingsIcon fill={config.theme.extend.colors.primary["900"]} />,
             value: "",
             title: "Savings",
             addable: {
@@ -115,7 +114,7 @@ export default function Dashboard() {
             }
         },
         earnings: {
-            icon: <BasketIcon fill={x.theme.extend.colors.primary["900"]} />,
+            icon: <BasketIcon fill={config.theme.extend.colors.primary["900"]} />,
             value: "N5, 000",
             title: "Earnings",
             viewable: {
@@ -127,7 +126,7 @@ export default function Dashboard() {
             }
         },
         investments: {
-            icon: <PortfolioIcon fill={x.theme.extend.colors.primary["900"]} />,
+            icon: <PortfolioIcon fill={config.theme.extend.colors.primary["900"]} />,
             value: "N5, 000",
             title: "Investments",
             addable: {

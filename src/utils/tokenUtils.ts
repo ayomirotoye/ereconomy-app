@@ -1,10 +1,19 @@
 import httpService from "../services/httpService";
 import { endpoints } from "./apiCallEndpoints";
 import { handleMyErrors } from "./errorHandlingUtil";
-import { getValueFromUserDetail, isEmptyString, isNullOrUndefined } from "./helpers";
+import { getValueFromUserDetail, isEmptyString, isNullOrUndefined, isSuccessful } from "./helpers";
 
 let tokenCounterTimeoutId = -1;
 export const tokenRefreshTimeout = tokenCounterTimeoutId;
+
+export const doAuthentication = () => {
+    let userLoginStatus = getValueFromUserDetail("isLoggedIn");
+    if (userLoginStatus !== null && ["true", true].includes(userLoginStatus)) {
+        return true;
+    }
+    return null;
+};
+
 export const parseJwt = (token: any) => {
     try {
         let base64Url = token.split(".")[1];
@@ -23,20 +32,27 @@ export const parseJwt = (token: any) => {
     }
 };
 
-export const tokenRequeryProcessing = (accessToken: string) => {
-    let _tDet = parseJwt(accessToken);
-    let expiresAt = _tDet?.exp;
-    let expiresAt_ms = expiresAt;
-    let nowNow = new Date().getTime();
-    // let tokenRequeryInterval = (expiresAt * 1000 - nowNow) * 0.8;
-    let tokenRequeryInterval = 180000;
-    sessionStorage.setItem("nowNow", String(nowNow));
-    sessionStorage.setItem("expiresAt", expiresAt_ms);
-    sessionStorage.setItem("requeryTime", String(nowNow + tokenRequeryInterval));
-    sessionStorage.setItem("tokenRequeryInterval", String(tokenRequeryInterval));
+// export const tokenRequeryProcessing = (accessToken: string, refreshToken: string) => {
 
-    return { tokenDetails: _tDet, tokenRequeryInterval: tokenRequeryInterval };
-};
+//     let _tDet = parseJwt(accessToken);
+//     console.log("_tDet_tDet::", _tDet)
+//     console.log("accessToken::", accessToken)
+//     let expiresAt = _tDet?.exp;
+//     let expiresAt_ms = expiresAt;
+//     console.log("expiresAt_msexpiresAt_ms::", new Date(expiresAt_ms));
+//     let nowNow = new Date().getTime();
+//     // let tokenRequeryInterval = (expiresAt * 1000 - nowNow) * 0.8;
+//     let tokenRequeryInterval = 60000;
+
+//     sessionStorage.setItem('refreshToken', refreshToken);
+//     sessionStorage.setItem("isLoggedIn", "true");
+//     sessionStorage.setItem("nowNow", String(nowNow));
+//     sessionStorage.setItem("expiresAt", expiresAt_ms);
+//     sessionStorage.setItem("requeryTime", String(nowNow + tokenRequeryInterval));
+//     sessionStorage.setItem("tokenRequeryInterval", String(tokenRequeryInterval));
+//     keepTokenFresh();
+//     return { tokenDetails: _tDet, tokenRequeryInterval: tokenRequeryInterval };
+// };
 
 function getRefreshToken() {
     let tokenVal = sessionStorage.getItem("refreshToken");
@@ -50,13 +66,12 @@ const getTokenRefreshTime = () => {
         let time = Number(interval)
         return time - (Math.floor(time / 5))
     }
-    return 5000
+    return 180000
 }
 
 export const keepTokenFresh = async () => {
     setTimeout(() => {
         refreshToken()
-        keepTokenFresh()
     }, getTokenRefreshTime());
 }
 
@@ -66,27 +81,22 @@ export const refreshToken = async () => {
         if (!isNullOrUndefined(refT) || !isEmptyString(refT)) {
             const options = {
                 headers: {
-                    "content-type": "application/x-www-form-urlencoded;charset=utf-8",
-                    Authorization: "Basic ".concat(
-                        process.env.REACT_APP_BASIC_AUTH ?? ""
-                    ),
+                    "content-type": "application/json"
                 },
             };
-            const url = endpoints.loginEndpoint;
-            const {  data } = await httpService.post(
+            const url = endpoints.refreshTokenEndpoint;
+            const { data } = await httpService.post(
                 url,
-                {},
+                {
+                    "refreshToken": getRefreshToken()
+                },
                 options
             );
 
-            if ( data) {
-                const jwtToken = data.access_token;
-                clearTimeouts(tokenRefreshTimeout);
-                sessionStorage.setItem("refreshToken", data.refresh_token);
-                tokenRequeryProcessing(jwtToken);
-
-                // recursiveCountdownTo(tRes.tokenRequeryInterval, true);
-                httpService.setJwt(jwtToken);
+            if (isSuccessful(data.responseCode)) {
+                const jwtToken = data.data.token;
+                const refreshToken = data.data.refreshToken;
+                tokenPersistenceFlow(jwtToken, refreshToken);
                 return data;
             }
         }
@@ -96,6 +106,11 @@ export const refreshToken = async () => {
     }
 };
 
+
+export const tokenPersistenceFlow = (accessToken: string, refreshToken: string) => {
+    sessionStorage.setItem("refreshToken", refreshToken);
+    httpService.setJwt(accessToken);
+}
 
 export const clearTimeouts = (timeOutId = 0) => {
     if (timeOutId > 0) {
@@ -109,14 +124,6 @@ export const clearTimeouts = (timeOutId = 0) => {
             while (firstId !== lastId) window.clearTimeout(++firstId);
         };
     }
-};
-
-export const doAuthentication = () => {
-    let userLoginStatus = getValueFromUserDetail("isLoggedIn");
-    if (userLoginStatus !== null && ["true", true].includes(userLoginStatus)) {
-        return true;
-    }
-    return null;
 };
 
 

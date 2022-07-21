@@ -10,3 +10,11 @@ export const callGetUserAccountBalance = async () => {
     });
     return data;
 }
+
+export const callGetEarnings = async () => {
+    const url = endpoints.earningsEndpoint;
+    const { data } = await httpService.get(url).catch((err: any) => {
+        return { data: handleMyErrors(err) };
+    });
+    return data;
+}

@@ -8,6 +8,15 @@ button:hover:not([disabled]) {
     transform: translateY(-5px);
 }
 
-button:disabled{
+button:disabled {
     background-color: gray;
+}
+
+.short-input {
+    padding: 12px 16px;
+    height: 48px;
+    background: #ffffff;
+    border: 3px solid #ebebeb;
+    box-sizing: border-box;
+    border-radius: 8px;
 }

@@ -17,7 +17,7 @@ const Button = ({
                 onClick={onClicked}
                 type="button"
                 className={className}>
-                <span>{isLoading ? <SpinnerCircleIcon width="30px" height="30px" /> : <>{children} {buttonText}</>}</span></button>
+                <span>{isLoading ? <SpinnerCircleIcon width="30" height="30" /> : <>{children} {buttonText}</>}</span></button>
         </div >
     );
 }

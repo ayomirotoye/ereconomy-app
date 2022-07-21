@@ -1,6 +1,5 @@
 
 import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../hooks/state";
 import { urlPaths } from "../static/constants";
 import Brand from "./Brand";
 import MenuDropdown from "./dropdowns/MenuDropdown";
@@ -24,35 +23,7 @@ const navbarItems = [
 
 ]
 export default function Header({ isVisible = true }: any) {
-    const loginState = useAppSelector(
-        (state: any) => state.authReducer?.loginState
-    );
-    const dispatch = useAppDispatch();
-    // const MenuItem = () => {
-
-    //     const checkIfUserIsLoggedIn = () => {
-    //         if (!loginState.isLoggedIn) {
-    //             dispatch(toggleLoginModal({ isLoginModalOpen: true }));
-    //         } else {
-    //             //CLOSE MODAL
-    //         }
-    //     };
-
-    //     return (
-    //         <>
-    //             <Nav className="mx-auto">
-    //                 <LoginModal />
-    //                 <CustomNavLinkSmall href="/about">About us</CustomNavLinkSmall>
-    //                 <CustomNavLinkSmall href="/contact">Contact</CustomNavLinkSmall>
-    //                 <CustomNavLinkSmall href="/contact">Team</CustomNavLinkSmall>
-    //             </Nav>
-    //             <Nav>
-    //                 <StyledButton onClick={checkIfUserIsLoggedIn}> <LoginIcon />Start</StyledButton>
-    //             </Nav>
-    //         </>
-    //     );
-    // };
-
+   
     return (
         <>
             {isVisible ?

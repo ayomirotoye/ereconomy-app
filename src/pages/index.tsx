@@ -4,12 +4,11 @@ import { LockFundIcon } from "../assets/icons/LockFundIcon";
 import { PowerButtonIcon } from "../assets/icons/PowerButtonIcon";
 import { RankIcon } from "../assets/icons/RankIcon";
 import { TargetSavingIcon } from "../assets/icons/TargetSavingIcon";
+import { AsyncImage } from "../components/AsyncImage";
 import Button from "../components/buttons/Button";
 import InfoCard from "../components/cards/InfoCard";
 import PageWrapper from "../components/PageWrapper";
 import IntroContent from "../static/introContent.json";
-
-
 
 const Home = () => {
     return (
@@ -50,7 +49,7 @@ const Home = () => {
             <div className="md:grid grid-cols-2 gap-4 mx-14 my-[128px]">
                 <div>
                     <div className="flex justify-center">
-                        <img width={"250px"} src={"https://storage.googleapis.com/piggyvestwebsite/piggywebsite2020/invest_c3fcc60df0/invest_c3fcc60df0.png"} />
+                        <AsyncImage width="250px" src="https://storage.googleapis.com/piggyvestwebsite/piggywebsite2020/invest_c3fcc60df0/invest_c3fcc60df0.png" />
                     </div>
                 </div>
                 <div>

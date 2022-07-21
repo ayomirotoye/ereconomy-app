@@ -14,6 +14,7 @@ export const responseCodes = {
     PAGE_NOT_FOUND: "404",
 };
 export const responseMessages = {
+    SUCCESSFUL: "Successful",
     ACCESS_DENIED: "You do not have access to this resource",
     BAD_REQUEST: "There is something wrong with this request",
     INVALID_GRANT: "There is something wrong with your credentials",
@@ -33,6 +34,7 @@ export const tnxPinLength = 6;
 export const urlPaths={
     home:"/",
     dashboard:"/dashboard",
+    paymentStatus:"/payment-status",
     about:"/about",
     contactUs:"/contact-us",
     login:"/login"

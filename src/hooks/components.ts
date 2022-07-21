@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import queryString from "query-string";
+import { useEffect, useMemo, useState } from 'react';
 import { useMediaQuery } from "react-responsive";
-import { useLocation } from 'react-router';
-import { keepTokenFresh, refreshToken } from '../utils/tokenUtils';
 
 export const useUrlInfo = () => {
   const [urlInfo, setUrlInfo] = useState<any>({});
@@ -9,9 +8,8 @@ export const useUrlInfo = () => {
     setUrlInfo({
       hostName: window.location.hostname,
       href: window.location.href,
+      baseUrl: window.location.origin
     })
-    console.log(window.location.hostname)
-    console.log(window.location.href)
   }, [])
 
   return urlInfo;
@@ -59,54 +57,12 @@ export const useMediaQueryWrapper = () => {
 };
 
 export const useQuery = () => {
-  const { search } = useLocation();
-  return React.useMemo(() => new URLSearchParams(search), [search]);
-}
-function useCheckToken() {
-  const rightNow = new Date().getTime();
-  const [requeryTime, setRequeryTime] = useState("");
-  useEffect(() => {
-    setRequeryTime(sessionStorage.getItem("requeryTime") || "");
-  }, [])
-  return requeryTime ? (parseInt(requeryTime) > rightNow) : false;
-}
-
-export const useTokenRefresh = () => {
-  const [isRefreshingToken, setisRefreshingToken] = useState(true);
-  const isCheckToken = useCheckToken();
-  const [isTokenFresh, setIsTokenFresh] = useState(isCheckToken);
-  const [firstRender, setFirstRender] = useState(true);
-
-
-  const shouldRender = firstRender ? firstRender : isTokenFresh;
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-
-    // Attempt to refresh token and set up service to continously refresh token
-    async function initializeToken() {
-      await refreshToken();
-      keepTokenFresh();
-      setisRefreshingToken(false);
-    }
-
-    initializeToken();
-
-    // Set up service to continously check if token is fresh
-    const myInterval = setInterval(() => {
-      if (!isCheckToken) {
-        setIsTokenFresh(false);
-      }
-    }, 1000);
-
-    setFirstRender(false);
-
-    // clean up
-    return () => {
-      clearInterval(myInterval);
-    };
-  }, []);
-
-  return { shouldRender, isRefreshingToken }
+  const [query, setQuery] = useState<any>({});
+  const queryParams = queryString.parse(window.location.search);
+  useMemo(() => {
+    setQuery(queryParams);
+  },[]);
+  return query;
 }
 
 export const useLoggedInUserDetails = () => {
@@ -118,3 +74,45 @@ export const useLoggedInUserDetails = () => {
   }, [])
   return JSON.parse(userDetails);
 }
+
+// export const useTokenRefresh = () => {
+//   const [isRefreshingToken, setisRefreshingToken] = useState(true);
+//   const [isTokenFresh, setIsTokenFresh] = useState(checkToken());
+//   const [firstRender, setFirstRender] = useState(true);
+
+
+//   function checkToken() {
+//     const rightNow = new Date().getTime();
+//     const requeryTime = sessionStorage.getItem("requeryTime")
+//     return requeryTime ? (parseInt(requeryTime) > rightNow) : false;
+//   }
+//   const shouldRender = firstRender ? firstRender : isTokenFresh;
+//   useEffect(() => {
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+
+//     // Attempt to refresh token and set up service to continously refresh token
+//     async function initializeToken() {
+//       await refreshToken();
+//       keepTokenFresh();
+//       setisRefreshingToken(false);
+//     }
+//     initializeToken();
+
+//     // Set up service to continously check if token is fresh
+//     const myInterval = setInterval(() => {
+//       if (!checkToken()) {
+//         setIsTokenFresh(false);
+//       }
+//     }, 1000);
+
+//     setFirstRender(false);
+
+//     // clean up
+//     return () => {
+//       clearInterval(myInterval);
+//     };
+//   }, []);
+
+//   return { shouldRender, isRefreshingToken }
+// }
+

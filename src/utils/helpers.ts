@@ -2,6 +2,11 @@ import httpService from "../services/httpService";
 import { alertTimeOutInMs, responseCodes } from "../static/constants";
 import { parseJwt } from "./tokenUtils";
 
+
+export const defineDirection = ()=>{
+
+}
+
 export const formatCurrency = (input_val: any) => {
   // appends $ to value, validates decimal side
   // and puts cursor back in right position.

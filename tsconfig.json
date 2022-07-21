@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "../inventory-mgt/src/utils/helper.ts"  ]
 }

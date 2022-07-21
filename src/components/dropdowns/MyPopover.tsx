@@ -1,12 +1,13 @@
 import { Popover, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
+import { hasKeys } from "../../utils/helpers";
 
 export default function MyPopover({ showAs, listItems }: any) {
 
     return (
         <Popover className="relative mr-5">
-            {({ open }:any) => (
+            {({ open }: any) => (
                 <>
                     <Popover.Button
                         className={`${open ? '' : 'text-opacity-90'} rounded-md focus:outline-none active:outline-none`}
@@ -27,12 +28,18 @@ export default function MyPopover({ showAs, listItems }: any) {
                                 <div className="p-5 bg-white">
                                     {listItems.map((item: any, index: number) => (
                                         <React.Fragment key={`popoverlist_${index}`}>
-                                            <Link to={item.href} >
-                                                <span className="grid grid-cols-6 gap-4 cursor-pointer my-2">
+                                            {!hasKeys(item.clickable) ?
+                                                <Link to={item.href} >
+                                                    <span className="grid grid-cols-6 gap-4 cursor-pointer my-2">
+                                                        <div className="col-span-2 text-left">{item.icon}</div>
+                                                        <div className="col-span-4">{item.name}</div>
+                                                    </span>
+                                                </Link> :
+                                                <span onClick={item.clickable.onClick} className="grid grid-cols-6 gap-4 cursor-pointer my-2">
                                                     <div className="col-span-2 text-left">{item.icon}</div>
                                                     <div className="col-span-4">{item.name}</div>
                                                 </span>
-                                            </Link>
+                                            }
                                         </React.Fragment>
                                     ))}
                                 </div>

@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import toast from "react-hot-toast";
+import React, { useEffect, useState } from "react";
+import { AiFillEye } from 'react-icons/ai';
+import { useNavigate } from "react-router";
 import colors from "tailwindcss/colors";
-import {config} from /* preval */ '../../tailwind.config'
 import { AvatarIcon } from "../../assets/icons/AvatarIcon";
 import BasketIcon from "../../assets/icons/BasketIcon";
-import { EyeIcon } from "../../assets/icons/EyeIcon";
 import { LogoutIcon } from "../../assets/icons/LogoutIcon";
 import { NotificationIcon } from "../../assets/icons/NotificationIcon";
 import { PlusIcon } from "../../assets/icons/PlusIcon";
@@ -12,62 +11,36 @@ import { PortfolioIcon } from "../../assets/icons/PortfolioIcon";
 import { SavingsIcon } from "../../assets/icons/SavingsIcon";
 import { UserIcon } from "../../assets/icons/UserIcon";
 import { UserSettingsIcon } from "../../assets/icons/UserSettings";
-import Alert from "../../components/alerts";
-import Button from "../../components/buttons/Button";
 import TileCard from "../../components/cards/TileCard";
 import MainPageContainer from "../../components/containers/MainPageContainer";
 import MyPopover from "../../components/dropdowns/MyPopover";
-import AmountInput from "../../components/inputs/AmountInput";
 import SearchInput from "../../components/inputs/SearchInput";
 import DashboardAside from "../../components/micro-components/dashboard/DashboardAside";
 import DashboardThirdSection from "../../components/micro-components/dashboard/DashboardThirdSection";
 import TimelineGraph from "../../components/micro-components/dashboard/TimelineGraph";
-import DialogModal from "../../components/modals/DialogModal";
 import PageWrapper from "../../components/PageWrapper";
 import Sidebar from "../../components/Sidebar";
-import { useUrlInfo } from "../../hooks/components";
-import { callInitiateCardPayment } from "../../services/paymentService";
-import { responseMessages } from "../../static/constants";
+import { callGetEarnings, callGetUserAccountBalance } from "../../services/accountService";
+import { config } from /* preval */ '../../tailwind.config';
 import { dashboardLinks } from "../../utils/appNavigationLinks";
-import { isSuccessful } from "../../utils/helpers";
+import { mergeArr, sortArray, sumArrValues } from "../../utils/arrayUtils";
+import { formatCurrency, isSuccessful } from "../../utils/helpers";
+import AddSavingsModal from "./micro-components/AddSavingsModal";
+import ViewEarningsModal from "./micro-components/ViewEarningsModal";
+
 
 export default function Dashboard() {
 
-    const urlInfo = useUrlInfo();
-    const [formErrors] = useState<any>({
+    const navigate = useNavigate();
 
-    });
     const [showAddSavingsModal, setShowAddSavingsModal] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [values, setValues] = useState({
-        "amount": "",
-    });
+    const [showEarningsModal, setShowEarningsModal] = useState(false);
 
-    const initiatePayment = async () => {
 
-        const requestData = {
-            ...values,
-            amount: parseFloat(String(values.amount).replaceAll(',', '')),
-            email: "ayomirotoye@gmail.com",
-            redirectUrl: urlInfo?.href
-        }
-        console.log("requestData::", requestData)
-        setIsSubmitting(true);
-        const apiCall = await callInitiateCardPayment(requestData);
-        setIsSubmitting(false);
-        console.log("respomse::", apiCall);
-
-        if (isSuccessful(apiCall.responseCode)) {
-            if (apiCall.responseCode === 200) {
-                window.location.href = apiCall.data.authorizationUrl;
-            }
-        } else {
-            toast.custom((t) => <Alert type="failed" t={t} message={apiCall?.message ?? responseMessages.BAD_REQUEST} />, {
-                position: 'top-center',
-            });
-        }
+    const doLogout = () => {
+        sessionStorage.clear();
+        navigate("/");
     }
-
 
     const handleNewSavings = () => {
         setShowAddSavingsModal(true);
@@ -76,10 +49,53 @@ export default function Dashboard() {
     const handleNewInvestment = () => {
         setShowAddSavingsModal(true);
     }
-    const handleCloseNewSavigsModal = () => {
-        setShowAddSavingsModal(false);
+
+    const handleViewEarnings = () => {
+        setShowEarningsModal(true);
     }
 
+    const fetchSavingsBalance = () => {
+        callGetUserAccountBalance().then((response) => {
+            console.log("responsecode::", response)
+            if (isSuccessful(response?.responseCode)) {
+                if (response.data?.length > 0) {
+                    setTileItems(prev => ({
+                        ...prev,
+                        savings: {
+                            ...tileItems.savings, value: formatCurrency(response.data[0]?.balance)
+                        }
+                    })
+                    )
+                }
+            }
+        })
+    }
+    const fetchEarnings = () => {
+        callGetEarnings().then((response) => {
+            console.log("earnings::", response)
+            if (isSuccessful(response?.responseCode)) {
+                if (response.data) {
+                    let sum = sumArrValues(Object.values(response.data.summary));
+                    const listOfEarnings = sortArray(mergeArr(Object.values(response.data.records)), "createdOn", -1);
+                    console.log("list::", listOfEarnings);
+                    setTileItems(prev => ({
+                        ...prev,
+                        earnings: {
+                            ...tileItems.earnings,
+                            list: listOfEarnings,
+                            value: formatCurrency(sum)
+                        }
+                    })
+                    )
+                }
+            }
+        })
+    }
+
+    useEffect(() => {
+        fetchSavingsBalance();
+        fetchEarnings();
+    }, [])
 
     const menuIconItems = [
         {
@@ -94,6 +110,9 @@ export default function Dashboard() {
             icon: <LogoutIcon className="h-7 w-7 mt-1"
                 stroke={config.theme.extend.colors.primary[900]}
                 fill={config.theme.extend.colors.primary[900]} strokeWidth={3} />,
+            clickable: {
+                onClick: () => doLogout()
+            }
         },
         {
             name: 'Settings',
@@ -106,7 +125,7 @@ export default function Dashboard() {
     const [tileItems, setTileItems] = useState({
         savings: {
             icon: <SavingsIcon fill={config.theme.extend.colors.primary["900"]} />,
-            value: "",
+            value: "N0",
             title: "Savings",
             addable: {
                 icon: <PlusIcon className="p-1 bg-green-900 rounded-lg h-5 w-5" height="60" width="60" />,
@@ -115,19 +134,17 @@ export default function Dashboard() {
         },
         earnings: {
             icon: <BasketIcon fill={config.theme.extend.colors.primary["900"]} />,
-            value: "N5, 000",
+            value: "N0",
+            list: [] as any,
             title: "Earnings",
             viewable: {
-                icon: <EyeIcon fill={colors.white}
-                    className="p-1 bg-green-900 rounded-lg h-5 w-5"
-                    height="60"
-                    width="60" />,
-                onClick: ""
+                icon: <AiFillEye fill={colors.green[900]} fontSize={25} />,
+                onClick: handleViewEarnings
             }
         },
         investments: {
             icon: <PortfolioIcon fill={config.theme.extend.colors.primary["900"]} />,
-            value: "N5, 000",
+            value: "--",
             title: "Investments",
             addable: {
                 icon: <PlusIcon className="p-1 bg-green-900 rounded-lg h-5 w-5" height="60" width="60" />,
@@ -167,6 +184,7 @@ export default function Dashboard() {
                                                 value={value.value}
                                                 title={key}
                                                 addable={value.addable}
+                                                viewable={value.viewable}
                                             />
                                         </React.Fragment>
                                     })}
@@ -182,44 +200,20 @@ export default function Dashboard() {
                 </MainPageContainer>
             </div >
 
-            {showAddSavingsModal && <DialogModal
-                isModalVisible={showAddSavingsModal}
-                modalTitle="Add saving"
-                showFooter={false}
-                onClosed={handleCloseNewSavigsModal}
-                size="md:w-1/4"
+            {showAddSavingsModal &&
+                <AddSavingsModal
+                    onClose={() => setShowAddSavingsModal(false)}
+                    showModal={showAddSavingsModal}
+                />
+            }
 
-            >
-                <div className="py-4">
-                    <div className="mb-4">
-                        <AmountInput
-                            value={values.amount}
-                            hideableLabelText=""
-                            fixedLabelText="Amount to Save"
-                            onChange={(e: any) => {
-                                setValues({ ...values, [e.target.name]: e.target.value })
-                            }}
-                            type="amount"
-                            inputFontSize="md:text-md"
-                            name="amount"
-                            error={{
-                                hasError: formErrors.amount,
-                                message: formErrors.amount
-                            }}
-                        />
-                    </div>
-                    <Button
-                        isLoading={isSubmitting}
-                        onClicked={initiatePayment}
-                    >
-                        <span className="flex justify-center items-center">
-                            <PlusIcon className="p-1 bg-green-900 rounded-lg h-5 w-5 mr-2" />
-                            <span>Add</span>
-                        </span>
-                    </Button>
-                </div>
-
-            </DialogModal>}
+            {showEarningsModal &&
+                <ViewEarningsModal
+                    onClose={() => setShowEarningsModal(false)}
+                    showModal={showEarningsModal}
+                    earnings={tileItems.earnings.list}
+                />
+            }
         </PageWrapper >
     );
 }

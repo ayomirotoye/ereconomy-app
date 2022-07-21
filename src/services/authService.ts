@@ -1,7 +1,9 @@
 import { LoginRequest, RegisterRequest } from "../types/classes";
 import { endpoints } from "../utils/apiCallEndpoints";
 import { handleMyErrors } from "../utils/errorHandlingUtil";
-import { isSuccessful } from "../utils/helpers";
+import { cherryPickObject, isSuccessful } from "../utils/helpers";
+import { tokenPersistenceFlow } from "../utils/tokenUtils";
+// import { tokenRequeryProcessing } from "../utils/tokenUtils";
 import httpService from "./httpService";
 
 export const callRegisterApi = async (_data: RegisterRequest) => {
@@ -20,6 +22,7 @@ export const callRegisterApi = async (_data: RegisterRequest) => {
     return handleMyErrors(err);
   }
 }
+
 export const callUserLoginApi = async (_data: LoginRequest) => {
   try {
 
@@ -30,8 +33,21 @@ export const callUserLoginApi = async (_data: LoginRequest) => {
     });
     if (isSuccessful(data?.responseCode)) {
       const jwtToken = data.data?.tokenData.token;
-      httpService.setJwt(jwtToken);
+      const refreshToken = data.data?.tokenData.refreshToken;
+      tokenPersistenceFlow(jwtToken, refreshToken);
       sessionStorage.setItem("isLoggedIn", "true");
+      const cherryPickedData = cherryPickObject([
+        "firstName",
+        "lastName",
+        "phoneNumber",
+        "emailAddress",
+        "username",
+        "gender",
+        "userIdDetails",
+        "userAddress",
+        "accounts",
+      ], data.data)
+      sessionStorage.setItem("userDetails", JSON.stringify(cherryPickedData));
     }
     return data;
 
@@ -49,7 +65,7 @@ export const callUserLoginApi = async (_data: LoginRequest) => {
 export const callDoForgotPasswordUrl = async (request: any) => {
   try {
     const url = endpoints.forgotPassword;
-    const { data } = await httpService.post(url, request).catch((err:any) => {
+    const { data } = await httpService.post(url, request).catch((err: any) => {
       return handleMyErrors(err);
     });
     return data;

@@ -20,5 +20,20 @@ export const containsAll = (arr1: any[], arr2: any[]) => arr1.every(element => {
 });
 
 export const containsAny = (arr1: any[], arr2: any[]) => {
-   return  arr1.some(r=> arr2.indexOf(r) >= 0);
+    return arr1.some(r => arr2.indexOf(r) >= 0);
 };
+
+export const sumArrValues = (arr1: any[]) => {
+    return arr1.reduce((a, b) => a + b, 0);
+}
+
+export const mergeArr = (arr1: any[]) => {
+    let baseArr: string | any[] = [];
+    for (let i = 0; i < arr1.length; i++) {
+        baseArr = baseArr.concat(...arr1[i]);
+    }
+    return baseArr;
+}
+
+export const sortArray = (array: any, p: any, o = 1) =>
+    [...array].sort((a, b) => a[p].localeCompare(b[p]) * o)

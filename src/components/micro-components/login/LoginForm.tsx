@@ -2,9 +2,8 @@ import { useState } from "react"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router"
 import { Link } from "react-router-dom"
-import httpService from "../../../services/httpService"
+import { callUserLoginApi } from "../../../services/authService"
 import { alertTimeOutInMs, responseMessages, urlPaths } from "../../../static/constants"
-import { endpoints } from "../../../utils/apiCallEndpoints"
 import { hasKeys, isSuccessful } from "../../../utils/helpers"
 import Alert from "../../alerts"
 import Button from "../../buttons/Button"
@@ -27,12 +26,12 @@ export default function LoginForm({ switchToRegister }: any) {
         try {
 
             // Authenticate user with credentials
-            const userLoginCall = await httpService.post(endpoints.loginEndpoint, values);
+            const userLoginCall = await callUserLoginApi(values);
             setIsSubmitting(false);
-            if (isSuccessful(String(userLoginCall?.data?.responseCode))) {
+            if (isSuccessful(String(userLoginCall?.responseCode))) {
                 router(urlPaths.dashboard)
             } else {
-                toast.custom((t) => <Alert type="failed" t={t} message={userLoginCall?.data?.message ?? responseMessages.BAD_REQUEST} />, {
+                toast.custom((t) => <Alert type="failed" t={t} message={userLoginCall?.message ?? responseMessages.BAD_REQUEST} />, {
                     position: 'top-center',
                     duration: alertTimeOutInMs
                 });
